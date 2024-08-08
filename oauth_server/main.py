@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-
 from pydantic import BaseModel, AnyUrl
+
+from oauth_server.database import OAuthDB
 
 
 class App(BaseModel):
@@ -9,9 +10,10 @@ class App(BaseModel):
 
 
 app = FastAPI()
+db = OAuthDB()
 
 @app.get("/status")
-def read_root():
+def status_check():
     return {"Hello": "World"}
 
 @app.post("/register/")
@@ -21,6 +23,3 @@ def register(app: App):
 @app.post("/login")
 def login():
     pass
-
-
-
