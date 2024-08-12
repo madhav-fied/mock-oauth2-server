@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyHttpUrl, validator
+import re
 
 # oauth client register
 # oauth client login
@@ -6,14 +7,33 @@ from pydantic import BaseModel
 # oauth accessing the resource
 
 class OAuthClientRegistration(BaseModel):
-    pass
+    client_id: AnyHttpUrl
+    redirect_url: AnyHttpUrl
+
+    @validator('redirect_url')
+    def redirect_url_should_be_https(self, given_value):
+        assert re.search("^https:", given_value), 'rediret must support https endpoint'
 
 class OAuthClientLoginAttempt(BaseModel):
-    pass
+    client_id: AnyHttpUrl
+    response_type: "code"
+    redirect_url: AnyHttpUrl
+    scope: str
+    state: str
 
-class OAuthClientAccessResourc(BaseModel):
-    pass
+    @validator('redirect_url')
+    def redirect_url_should_be_https(self, given_value):
+        assert re.search("^https:", given_value), 'rediret must support https endpoint'
+
+class OAuthClientAccessResource(BaseModel):
+    access_token: str
+    scope: str
+    client_id: AnyHttpUrl
 
 class OAuthClientAuthzCodeExchange(BaseModel):
-    pass
+    grant_type: "authorization_code"
+    code: str
+    redirect_url: AnyHttpUrl
+    client_id: AnyHttpUrl
+    client_secret: str
 
