@@ -11,18 +11,18 @@ class OAuthClientRegistration(BaseModel):
     redirect_url: AnyHttpUrl
 
     @validator('redirect_url')
-    def redirect_url_should_be_https(self, given_value):
+    def redirect_url_should_be_https(cls, given_value):
         assert re.search("^https:", given_value), 'rediret must support https endpoint'
 
 class OAuthClientLoginAttempt(BaseModel):
     client_id: AnyHttpUrl
-    response_type: "code"
+    response_type: str
     redirect_url: AnyHttpUrl
     scope: str
     state: str
 
     @validator('redirect_url')
-    def redirect_url_should_be_https(self, given_value):
+    def redirect_url_should_be_https(cls, given_value):
         assert re.search("^https:", given_value), 'rediret must support https endpoint'
 
 class OAuthClientAccessResource(BaseModel):
@@ -31,7 +31,7 @@ class OAuthClientAccessResource(BaseModel):
     client_id: AnyHttpUrl
 
 class OAuthClientAuthzCodeExchange(BaseModel):
-    grant_type: "authorization_code"
+    grant_type: str
     code: str
     redirect_url: AnyHttpUrl
     client_id: AnyHttpUrl
