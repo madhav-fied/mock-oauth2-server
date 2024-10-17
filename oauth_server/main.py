@@ -1,12 +1,13 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, AnyUrl
 from oauth_server.models import (OAuthClientRegistration, OAuthClientLoginAttempt)
 
+from typing import Annotated
+
 app = FastAPI()
-templates = Jinja2Templates(directory="htmx-templates")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,17 +21,18 @@ app.add_middleware(
 def status_check():
     return "OK"
 
-@app.get("/register/", response_class=HTMLResponse)
-def get_register_form(request: Request):
-    # returns html for login form
-    return templates.TemplateResponse(request=request, name="register-app.html")
+app.mount("/register/", StaticFiles(directory="static/register/", html=True), name="register")
 
 @app.post("/register/", response_class=HTMLResponse)
-def register_app(app: OAuthClientRegistration):
+async def register_app(client: Annotated[str, Form()], redirect_url: Annotated[str, Form()]):
     # get details from form and return a modal with client secret
     # error details in modal
-    print(app)
-    pass
+    registered = OAuthClientRegistration(client_id=client, redirect_url=redirect_url)
+    
+    print(client)
+    print(redirect_url)
+    # register with backend
+    return "Done"
     
 
 

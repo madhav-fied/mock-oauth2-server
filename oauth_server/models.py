@@ -1,14 +1,13 @@
 from pydantic import BaseModel, AnyHttpUrl, validator
+from typing_extensions import Annotated
+
+from fastapi import Form
+
 import re
 
-# oauth client register
-# oauth client login
-# oauth client getting access token
-# oauth accessing the resource
-
 class OAuthClientRegistration(BaseModel):
-    client_id: AnyHttpUrl
-    redirect_url: AnyHttpUrl
+    client_id: Annotated[AnyHttpUrl, Form()]
+    redirect_url: Annotated[AnyHttpUrl, Form()]
 
     @validator('redirect_url')
     def redirect_url_should_be_https(cls, given_value):
