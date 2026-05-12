@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css" />
+    <title>Register App</title>
+</head>
+<body>
+    <div id="form-container">
+        <h1>Register Your Application</h1>
+        <form>
+            <div id="client-name-inp">
+                <label for="client_name">Client Name:</label>
+                <input type="text" id="client_name" name="client" required>
+            </div>
+            <div id="redirect-uri-inp">
+                <label for="redirect_uri">Redirect URI:</label>
+                <input type="url" id="redirect_uri" name="redirect_url" required>
+            </div>
+            <div id="register-btn">
+                <button id="submit" type="submit">Register</button>
+            </div>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
