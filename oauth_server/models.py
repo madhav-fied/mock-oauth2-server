@@ -1,17 +1,16 @@
-from pydantic import BaseModel, AnyHttpUrl, validator
-from typing_extensions import Annotated
-
-from fastapi import Form
+from pydantic import BaseModel, AnyHttpUrl, field_validator
 
 import re
 
 class OAuthClientRegistration(BaseModel):
-    client_id: Annotated[AnyHttpUrl, Form()]
-    redirect_url: Annotated[AnyHttpUrl, Form()]
+    client_id: AnyHttpUrl
+    redirect_url: AnyHttpUrl
 
-    @validator('redirect_url')
-    def redirect_url_should_be_https(cls, given_value):
-        assert re.search("^https:", given_value), 'rediret must support https endpoint'
+    @field_validator('redirect_url')
+    @classmethod
+    def redirect_url_should_be_https(cls, given_value: AnyHttpUrl):
+        assert re.search("^https:", str(given_value)), 'redirect must support https endpoint'
+        return given_value
 
 class OAuthClientLoginAttempt(BaseModel):
     client_id: AnyHttpUrl
@@ -20,9 +19,11 @@ class OAuthClientLoginAttempt(BaseModel):
     scope: str
     state: str
 
-    @validator('redirect_url')
-    def redirect_url_should_be_https(cls, given_value):
-        assert re.search("^https:", given_value), 'rediret must support https endpoint'
+    @field_validator('redirect_url')
+    @classmethod
+    def redirect_url_should_be_https(cls, given_value: AnyHttpUrl):
+        assert re.search("^https:", str(given_value)), 'redirect must support https endpoint'
+        return given_value
 
 class OAuthClientAccessResource(BaseModel):
     access_token: str

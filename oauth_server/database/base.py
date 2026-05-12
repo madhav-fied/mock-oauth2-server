@@ -8,6 +8,7 @@ from datetime import date, timedelta
 from oauth_server.database.utils import generate_random_uuid
 from oauth_server.database.models import ClientSchema, AuthzSchema
 
+# TODO: check if everything is running sync
 
 DB_URL = os.getenv("DB_URL","postgresql+asyncpg://testusr:123@localhost/testdb")
 
@@ -17,7 +18,7 @@ class OAuthClientDB():
     
     async def create_tables(self):
         async with self.db_engine.begin() as connection:
-            await connection.run_sync(ClientSchema.metadata.create_all)
+            await connection.run_sync(ClientSchema.metadata.create_all) 
 
     async def get_client_by_id(self, *, client_id):
         async with AsyncSession(self.db_engine) as a_session:
